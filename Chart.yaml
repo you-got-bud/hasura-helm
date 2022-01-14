@@ -1,7 +1,7 @@
 apiVersion: v2
-name: hasura-helm3-chart
+name: hasura
 description: A Helm chart for Hasura GraphQL Engine
-keywords: 
+keywords:
   - Hasura
   - GraphQL
   - Realtime
@@ -25,4 +25,4 @@ version: 0.1.0
 # incremented each time you make changes to the application.
 appVersion: v1.3.3
 
-icon: https://raw.githubusercontent.com/delapecci/hasura-helm3-chart/master/hasura.jpg
+icon: https://raw.githubusercontent.com/you-got-bud/hasura-helm/master/hasura.jpg

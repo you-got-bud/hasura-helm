@@ -15,8 +15,14 @@ ingress:
         - hasura.yougotbud.com
       secretName: hasura-tls
 nameOverride: hasura
+
 nodeSelector: {}
 postgresDbUrl: postgres://postgres:example@timescaledb.default.svc.cluster.local:5432/postgres
+enableConsole: true
+jwtSecret: './key.json'
+adminSecret: 'example'
+autoscaling:
+  enabled: false
 replicaCount: 1
 resources:
   limits:

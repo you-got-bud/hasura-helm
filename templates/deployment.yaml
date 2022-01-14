@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "hasura-helm3-chart.fullname" . }}
+  name: {{ template "hasura.fullname" . }}
   labels:
-{{ include "hasura-helm3-chart.labels" . | indent 4 }}
+{{ include "hasura.labels" . | indent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "hasura-helm3-chart.name" . }}
+      app.kubernetes.io/name: {{ include "hasura.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: {{ include "hasura-helm3-chart.name" . }}
+        app.kubernetes.io/name: {{ include "hasura.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
       containers:
@@ -23,8 +23,18 @@ spec:
           env:
           - name: HASURA_GRAPHQL_DATABASE_URL
             value: {{ .Values.postgresDbUrl }}
+         {{- if .Values.enableConsole -}}
           - name: HASURA_GRAPHQL_ENABLE_CONSOLE
             value: "true"
+         {{- end }}
+         {{- if .Values.adminSecret -}}
+          - name: HASURA_GRAPHQL_ADMIN_SECRET
+            value:  "{{ .Values.adminSecret }}"
+         {{- end }}
+         {{- if .Values.jwtSecret }}
+          - name: HASURA_GRAPHQL_JWT_SECRET
+            value: "{{ .Files.Get .Values.jwtSecret | toPrettyJson }}"
+         {{- end }}
           ports:
             - name: http
               containerPort: 8080
