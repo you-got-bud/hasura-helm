@@ -15,7 +15,6 @@ ingress:
         - hasura.yougotbud.com
       secretName: hasura-tls
 nameOverride: hasura
-
 nodeSelector: {}
 postgresDbUrl: postgres://postgres:example@timescaledb.default.svc.cluster.local:5432/postgres
 enableConsole: true
