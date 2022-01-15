@@ -1,3 +1,4 @@
+{{- $fullName := include "hasura.fullname" . -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -21,20 +22,29 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
-          - name: HASURA_GRAPHQL_DATABASE_URL
-            value: {{ .Values.postgresDbUrl }}
-         {{- if .Values.enableConsole -}}
-          - name: HASURA_GRAPHQL_ENABLE_CONSOLE
-            value: "true"
-         {{- end }}
-         {{- if .Values.adminSecret -}}
-          - name: HASURA_GRAPHQL_ADMIN_SECRET
-            value:  "{{ .Values.adminSecret }}"
-         {{- end }}
-         {{- if .Values.jwtSecret }}
-          - name: HASURA_GRAPHQL_JWT_SECRET
-            value: "{{ .Files.Get .Values.jwtSecret | toPrettyJson }}"
-         {{- end }}
+            - name: HASURA_GRAPHQL_DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $fullName }}-postgres-url
+                  key: postgres-url
+            {{- if .Values.enableConsole }}
+            - name: HASURA_GRAPHQL_ENABLE_CONSOLE
+              value: "true"
+            {{- end }}
+            {{- if .Values.adminSecret }}
+            - name: HASURA_GRAPHQL_ADMIN_SECRET
+              valueFrom:
+                secretKeyRef: 
+                  name: {{ $fullName }}-admin-secret
+                  key: secret
+            {{- end }}
+            {{- if .Values.jwtSecret }}
+            - name: HASURA_GRAPHQL_JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $fullName }}-jwt-secret
+                  key: secret
+            {{- end }}
           ports:
             - name: http
               containerPort: 8080

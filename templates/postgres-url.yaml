@@ -1,0 +1,7 @@
+{{- $fullName := include "hasura.fullname" -}}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ $fullName }}-postgres-url
+data:
+  postgres-url: {{ .Values.postgresDbUrl | quote }}
