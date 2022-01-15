@@ -22,7 +22,11 @@ enableConsole: true
 jwtSecret: './key.json'
 adminSecret: 'example'
 autoscaling:
-  enabled: false
+  enabled: true
+  targetMemoryUtilizationPercentage: 50
+  targetCluUtilizationPercentage: 50
+  minReplicas: 1
+  maxReplicas: 5
 replicaCount: 1
 resources:
   limits:
